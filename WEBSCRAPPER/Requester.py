@@ -7,7 +7,7 @@ import lxml
 import csv
 
 HOST = "https://novosibirsk.n1.ru/"
-URL = "https://novosibirsk.n1.ru/search/?metro_time=10&metro=2353440%2C2353441%2C2353442%2C2353443%2C2353444%2C2353445%2C2353446%2C2353447&deal_type=sell&rubric=flats"
+URL = "https://novosibirsk.n1.ru/search/?rubric=flats&deal_type=sell&metro=2353440%2C2353441%2C2353442%2C2353443%2C2353444%2C2353445%2C2353446%2C2353447&metro_time=10&rooms=1&is_newbuilding=false&total_area_min=30&total_area_max=50&release_date_min=2000&floor_not_first=true&floors_count_min=10"
 HEADERS = {
     "Accept":
         "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -18,9 +18,13 @@ HEADERS = {
 def site_pagination(url):
     page_links = []
     page_links.append(url)
-    for i in range(2): #itertools.count(1):  # Бесконечный цикл по карточкам товаров(часы).
+    for i in itertools.count(1):
+        # Бесконечный цикл по карточкам товаров(часы).
+        # Выбрать через Selenium 100 карточек на странице
+        # для оптимизации запросов на сервер.
         URL_page = url + f'&page={i}'
-        try:
+        print(URL_page)
+        try: # не работает проверка запроса ==200, так как он и так выполняется, но с пустым перечнем квартир
             response = requests.get(URL_page, headers=HEADERS) #, params=params)
             response.encoding = 'utf-8'
             if response.status_code == 200:
@@ -32,6 +36,9 @@ def site_pagination(url):
             print("Information blocked")
             break
     return page_links
+
+# test
+print(site_pagination(URL))
 
 def get_content(html):
     response = requests.get(html, headers=HEADERS)  # , params=params)
@@ -48,6 +55,8 @@ def get_content(html):
     #print(links_flats)
     return links_flats
 
+# Test
+# print(get_content(URL))
 def get_info(url):
     # функция, собирающая информацию из карточки объявления о квартире
     response = requests.get(url, headers=HEADERS)
@@ -75,8 +84,8 @@ def get_info(url):
     print('\n', '----------------------------------------------', '\n', sep = '')
 
 for link_page in site_pagination(URL):
-    flats_om_page =get_content(link_page)
-    for flat in flats_om_page:
+    flats_om_page =get_content(link_page) #ссылка на карточку по квартире
+    for flat in flats_om_page: #получение подробной информации о квартире по ссылке выше
         print(flat)
         get_info(flat)
 

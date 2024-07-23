@@ -1,0 +1,1 @@
+Thread-4 (test_4), SyntaxError, some error
