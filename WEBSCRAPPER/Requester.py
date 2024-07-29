@@ -27,7 +27,7 @@ def site_pagination(url):
         try: # не работает проверка запроса ==200, так как он и так выполняется, но с пустым перечнем квартир
             response = requests.get(URL_page, headers=HEADERS) #, params=params)
             response.encoding = 'utf-8'
-            if response.status_code == 200:
+            if i < 5: #response.status_code == 200:
                 page_links.append(URL_page)
                 #get_content(URL_page)
             else:
