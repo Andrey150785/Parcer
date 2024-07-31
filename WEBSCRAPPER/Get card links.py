@@ -29,3 +29,5 @@ def get_content(html):
         links_flats.append(HOST+link_href)
     #print(links_flats)
     return links_flats
+print('\n', '-----------------------', '\n')
+print(get_content(URL))
