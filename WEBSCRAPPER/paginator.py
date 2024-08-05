@@ -16,6 +16,7 @@ HEADERS = {
 }
 
 def site_pagination(url):
+    # ВЫДАЕТ СПИСОК ССЫЛОК НА СТРАНИЦЫ С ОБЪЯВЛЕНИЯМИ
     page_links = []
     page_links.append(url)
     for i in itertools.count(1):
@@ -23,18 +24,23 @@ def site_pagination(url):
         # Выбрать через Selenium 100 карточек на странице
         # для оптимизации запросов на сервер.
         URL_page = url + f'&page={i}'
-        print(URL_page)
-        try: # не работает проверка запроса ==200, так как он и так выполняется, но с пустым перечнем квартир
-            response = requests.get(URL_page, headers=HEADERS) #, params=params)
-            response.encoding = 'utf-8'
-            if i < 5: #response.status_code == 200: ИЗМЕНИТЬ ЛОГИКУ СТОПА
-                page_links.append(URL_page)
-                #get_content(URL_page)
-            else:
-                break
+        # print(URL_page)
+        # не работает проверка запроса ==200, так как он и так выполняется, но с пустым перечнем квартир
+        response = requests.get(URL_page, headers=HEADERS) #, params=params)
+        response.encoding = 'utf-8'
+        soup = BeautifulSoup(response.text, 'lxml')
+        try:
+            signal_element = soup.find('li', class_='paginator-pages__item _next')
         except:
-            print("Information blocked")
+            signal_element = None
+        if signal_element is not None:  # response.status_code == 200:
+            page_links.append(URL_page)
+        else:
+            page_links.append(URL_page)
             break
+        # except:
+        #     print("Information blocked")
+        #     break
     return page_links
 
 # test
