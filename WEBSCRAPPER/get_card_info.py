@@ -48,8 +48,6 @@ def get_info(url):
     square = float(''.join([s for s in square.replace(',','.') if s.isdigit() or s == '.']))
     floor, all_floors = floors.split(' из ')
     telephone = soup.find('a', class_='offer-card-contacts-phones__phone')['href']
-
-# переделать код ниже с помощью Selenium и Xpath чтобы уйти от проверок
     try:
         vendor = soup.find('a', class_='ui-kit-link offer-card-contacts__link _agency-name _type-common _color-blue').find('span', class_='ui-kit-link__inner').text.strip()
     except:
@@ -59,13 +57,9 @@ def get_info(url):
     except:
         agency = 'no agency'
 
-
-    # print(f'{rooms = }\n{street = }\n{number = }\n{price = }\n{publish_date}\n{visits = }\n{declaration = }\n{description = }')
-    # print(f'{square=}\n{low_property=}\n{year=}\n{floor=}\n{all_floors=}\n{material=}')
-    # print(f'{vendor=}\n{agency=}\n{telephone=}')
-
     # Первая строка в выводе с заголовками
     flat_row = [rooms, street, number, square, floor, all_floors, price, publish_date, visits, declaration, description, low_property, year, material, agency, vendor, telephone]
+    # Вывод красивой таблицы в консоль
     table.add_row(flat_row)
     print(table)
     return flat_row
