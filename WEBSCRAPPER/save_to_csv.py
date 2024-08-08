@@ -4,6 +4,7 @@ import csv
 import datetime
 from time import perf_counter as pf
 from get_card_info import get_info, url, columns
+import sqlite3 as sq
 
 # print(get_info(url))
 # print('\n', '----------------------------------------------', '\n', sep = '')
@@ -19,3 +20,8 @@ with open(f'{file_name}.csv', 'w', newline='', encoding='utf-8-sig') as file:
 with open(f'{file_name}.csv', 'a', encoding='utf-8-sig', newline='') as file:
     writer = csv.writer(file, delimiter=';')
     writer.writerow(get_info(url))
+
+with sq.connect(f'{file_name}.db') as conn:
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE score > 500 ORDER BY score DESC LIMIT 5")
+    print(cursor.fetchmany(3))

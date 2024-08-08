@@ -28,6 +28,6 @@ def get_content(html):
         link_href = item.find('a', class_='link')['href']
         links_flats.append(HOST+link_href)
     #print(links_flats)
-    return links_flats
+    return links_flats, len(links_flats)
 print('\n', '-----------------------', '\n')
 print(get_content(URL))
