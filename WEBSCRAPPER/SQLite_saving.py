@@ -4,6 +4,7 @@ import datetime
 from time import perf_counter as pf
 import sqlite3 as sq
 from prettytable import PrettyTable
+from get_card_info import result
 
 HOST = "https://novosibirsk.n1.ru/"
 URL = "https://novosibirsk.n1.ru/search/?rubric=flats&deal_type=sell&metro=2353440%2C2353441%2C2353442%2C2353443%2C2353444%2C2353445%2C2353446%2C2353447&metro_time=10&rooms=1&is_newbuilding=false&total_area_min=30&total_area_max=50&release_date_min=2000&floor_not_first=true&floors_count_min=10"
@@ -20,12 +21,42 @@ url = 'https://novosibirsk.n1.ru//view/108168828/'
 file_name = f'Flats on {datetime.date.today().isoformat()}, {pf():.2f}' #Уникальное название файла
 columns = ['Количество комнат', 'Улица', '№ дома', 'Площадь', 'Этаж', 'Этажей в доме', 'Цена', 'Дата публикации',
       'Количество просмотров', 'Декларация', 'Описание', 'Собственность', 'Год постройки', 'Материал стен', 'Агентство',
-      'Продавец', 'Телефон']
+      'Продавец', 'Телефон', 'Ссылка']
 
 table = PrettyTable() #Создаем таблицу для красивого вывода в консоль
 table.field_names = columns
 
-with sq.connect(f'{file_name}.db') as conn:
+# Заменить текущую строку контекстного менеджера на ту, которая закоментирована
+# with sq.connect(f'{file_name}.db') as conn:
+with sq.connect(f'data.db') as conn:
     cursor = conn.cursor()
-    cursor.execute('CREATE TABLE flats (id INTEGER PRIMARY KEY, name TEXT)')
-    print(cursor.fetchmany(3))
+    cursor.execute("""CREATE TABLE IF NOT EXISTS flats (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Количество_комнат INTEGER, 
+        Улица TEXT, 
+        №_дома TEXT, 
+        Площадь INTEGER, 
+        Этаж INTEGER, 
+        Этажей_в_доме INTEGER, 
+        Цена INTEGER, 
+        Дата_публикации TEXT,
+        Количество_просмотров INTEGER, 
+        Декларация TEXT, 
+        Описание TEXT, 
+        Собственность TEXT, 
+        Год_постройки TEXT, 
+        Материал_стен TEXT, 
+        Агентство TEXT,
+        Продавец TEXT, 
+        Телефон TEXT, 
+        Ссылка TEXT
+        )""")
+
+    # r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17 = result
+    # cursor.execute(f"""INSERT INTO flats VALUES(1, 'Нарымская', '22', 33.512, '14', '25', 9000000, '9 апр', '27', 'Проектная декларация опубликована на сайте наш.дом.рф', 'Прованс — это городские резиденции в историческом центре Новосибирска рядом с Нарымским сквером от застройщика Группы компаний Дом-Строй.В проекте представлены 440 квартир с продуманными и функциональными планировками Площадью от 20 до 131 м2. Каждая квартира отличается удобным зонированием с правильным разделением приватных и общественных зон, панорамными видами на город и такими приятными деталями, как наличие в спальне отдельной ванной с окном и гардеробной.Локация:•5 минут от Нарымского сквера,•10 минут от ст. м. Красный проспект, 'Нарымская 22 — жизнь в историческом центре города,•Достопримечательности Новосибирска на расстоянии прогулки.', 'свидетельство о праве собственности', '2024 г.', 'кирпич - монолит', 'no agency', 'Дом-Строй', 'tel:+73832096534', 'https://novosibirsk.n1.ru//view/108168828/')""")
+    # print(r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, sep = '\n')
+    cursor.execute("INSERT INTO flats VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", result)
+    # cursor.execute(f"INSERT INTO flats VALUES('0', {r0}, {r1}, {r2}, {r3}, {r4}, {r5}, {r6}, {r7}, {r8}, {r9}, {r10}, {r11}, {r12}, {r13}, {r14}, {r15}, {r16}, {r17})")
+    # cursor.execute("""SELECT * FROM flats""")
+    # print(cursor.fetchall())
+

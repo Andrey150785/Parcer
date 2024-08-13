@@ -28,10 +28,11 @@ table = PrettyTable() #Создаем таблицу для красивого �
 
 columns = ['Количество комнат', 'Улица', '№ дома', 'Площадь', 'Этаж', 'Этажей в доме', 'Цена', 'Дата публикации',
       'Количество просмотров', 'Декларация', 'Описание', 'Собственность', 'Год постройки', 'Материал стен', 'Агентство',
-      'Продавец', 'Телефон']
+      'Продавец', 'Телефон','Ссылка']
 table.field_names = columns
 
 def get_info(url):
+    link = url
     flat_row = [] # Список из полученных параметров и характеристик квартиры из карточки
     # функция, собирающая информацию из карточки объявления о квартире
     response = requests.get(url, headers=HEADERS)
@@ -71,14 +72,16 @@ def get_info(url):
     # print(f'{vendor=}\n{agency=}\n{telephone=}')
 
     # Первая строка в выводе с заголовками
-    flat_row = [rooms, street, number, square, floor, all_floors, price, publish_date, visits, declaration, description, low_property, year, material, agency, vendor, telephone]
+    flat_row = [rooms, street, number, square, floor, all_floors, price, publish_date, visits, declaration, description, low_property, year, material, agency, vendor, telephone, link]
     table.add_row(flat_row)
     print(table)
     return flat_row
 
-
+result = get_info(url)
 print('\n', '----------------------------------------------', '\n', sep = '')
-get_info(url)
+print(result)
+
+
 
 # Обработка даты
 def date_calculate():
