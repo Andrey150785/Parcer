@@ -4,7 +4,6 @@ import datetime
 from time import perf_counter as pf
 import sqlite3 as sq
 from prettytable import PrettyTable
-from get_card_info import result
 
 HOST = "https://novosibirsk.n1.ru/"
 URL = "https://novosibirsk.n1.ru/search/?rubric=flats&deal_type=sell&metro=2353440%2C2353441%2C2353442%2C2353443%2C2353444%2C2353445%2C2353446%2C2353447&metro_time=10&rooms=1&is_newbuilding=false&total_area_min=30&total_area_max=50&release_date_min=2000&floor_not_first=true&floors_count_min=10"
@@ -21,37 +20,12 @@ url = 'https://novosibirsk.n1.ru//view/108168828/'
 file_name = f'Flats on {datetime.date.today().isoformat()}, {pf():.2f}' #Уникальное название файла
 columns = ['Количество комнат', 'Улица', '№ дома', 'Площадь', 'Этаж', 'Этажей в доме', 'Цена', 'Дата публикации',
       'Количество просмотров', 'Декларация', 'Описание', 'Собственность', 'Год постройки', 'Материал стен', 'Агентство',
-      'Продавец', 'Телефон', 'Ссылка']
+      'Продавец', 'Телефон']
 
 table = PrettyTable() #Создаем таблицу для красивого вывода в консоль
 table.field_names = columns
 
-# Заменить текущую строку контекстного менеджера на ту, которая закоментирована
-# with sq.connect(f'{file_name}.db') as conn:
-with sq.connect(f'data.db') as conn:
+with sq.connect(f'{file_name}.db') as conn:
     cursor = conn.cursor()
-    cursor.execute("""CREATE TABLE IF NOT EXISTS flats (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        Количество_комнат INTEGER, 
-        Улица TEXT, 
-        №_дома TEXT, 
-        Площадь INTEGER, 
-        Этаж INTEGER, 
-        Этажей_в_доме INTEGER, 
-        Цена INTEGER, 
-        Дата_публикации TEXT,
-        Количество_просмотров INTEGER, 
-        Декларация TEXT, 
-        Описание TEXT, 
-        Собственность TEXT, 
-        Год_постройки TEXT, 
-        Материал_стен TEXT, 
-        Агентство TEXT,
-        Продавец TEXT, 
-        Телефон TEXT, 
-        Ссылка TEXT
-        )""")
-
-    cursor.execute("INSERT INTO flats VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", result)
-    print(cursor.fetchall())
-
+    cursor.execute('CREATE TABLE flats (id INTEGER PRIMARY KEY, name TEXT)')
+    print(cursor.fetchmany(3))
