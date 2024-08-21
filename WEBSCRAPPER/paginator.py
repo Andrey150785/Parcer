@@ -24,8 +24,6 @@ def site_pagination(url):
         # Выбрать через Selenium 100 карточек на странице
         # для оптимизации запросов на сервер.
         URL_page = url + f'&page={i}'
-        # print(URL_page)
-        # не работает проверка запроса ==200, так как он и так выполняется, но с пустым перечнем квартир
         response = requests.get(URL_page, headers=HEADERS) #, params=params)
         response.encoding = 'utf-8'
         soup = BeautifulSoup(response.text, 'lxml')
@@ -33,14 +31,11 @@ def site_pagination(url):
             signal_element = soup.find('li', class_='paginator-pages__item _next')
         except:
             signal_element = None
-        if signal_element is not None:  # response.status_code == 200:
+        if signal_element is not None:
             page_links.append(URL_page)
         else:
             page_links.append(URL_page)
             break
-        # except:
-        #     print("Information blocked")
-        #     break
     return page_links
 
 # test
