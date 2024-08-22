@@ -8,6 +8,7 @@ import csv
 import datetime
 from time import perf_counter as pf
 from prettytable import PrettyTable
+import sqlite3 as sq
 
 HOST = "https://novosibirsk.n1.ru/"
 URL = "https://novosibirsk.n1.ru/search/?rubric=flats&deal_type=sell&metro=2353440%2C2353441%2C2353442%2C2353443%2C2353444%2C2353445%2C2353446%2C2353447&metro_time=10&rooms=1&is_newbuilding=false&total_area_min=30&total_area_max=50&release_date_min=2000&floor_not_first=true&floors_count_min=10"
@@ -19,13 +20,19 @@ HEADERS = {
 }
 url = 'https://novosibirsk.n1.ru//view/108168828/'
 
+# Сохранить информацию в базу данных SQLite и файл CSV:
+
+file_name = f'Flats on {datetime.date.today().isoformat()}, {pf():.2f}' #Уникальное название файла
+# print(file_name)
 table = PrettyTable() #Создаем таблицу для красивого вывода в консоль
+
 columns = ['Количество комнат', 'Улица', '№ дома', 'Площадь', 'Этаж', 'Этажей в доме', 'Цена', 'Дата публикации',
       'Количество просмотров', 'Декларация', 'Описание', 'Собственность', 'Год постройки', 'Материал стен', 'Агентство',
-      'Продавец', 'Телефон']
+      'Продавец', 'Телефон','Ссылка']
 table.field_names = columns
 
 def get_info(url):
+    link = url
     flat_row = [] # Список из полученных параметров и характеристик квартиры из карточки
     # функция, собирающая информацию из карточки объявления о квартире
     response = requests.get(url, headers=HEADERS)
@@ -58,17 +65,25 @@ def get_info(url):
         agency = 'no agency'
 
     # Первая строка в выводе с заголовками
+<<<<<<< HEAD
     flat_row = [rooms, street, number, square, floor, all_floors, price, publish_date, visits, declaration, description, low_property, year, material, agency, vendor, telephone]
     # Вывод красивой таблицы в консоль
+=======
+    flat_row = [rooms, street, number, square, floor, all_floors, price, publish_date, visits, declaration, description, low_property, year, material, agency, vendor, telephone, link]
+>>>>>>> 65b88aa8d6c82033871fe68eac3ad4672493941f
     table.add_row(flat_row)
     print(table)
     return flat_row
 
-
+result = get_info(url)
 print('\n', '----------------------------------------------', '\n', sep = '')
-get_info(url)
+print(result)
+
+
 
 # Обработка даты
 def date_calculate():
     pass
 
+def searching_doubles():
+    pass
