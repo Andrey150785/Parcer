@@ -26,6 +26,7 @@ with sq.connect('database.db') as conn:
     Телефон TEXT, 
     Ссылка TEXT
     )""")
+
     cur.execute("""INSERT INTO flats (Количество_комнат, 
     Улица, 
     №_дома, 
